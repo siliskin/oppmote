@@ -30,7 +30,7 @@
               {{ participant }}<span v-if="index != (nextEvent.participants.length -1)">,</span>
             </span>
             <progress v-if="nextEvent.participants.length < 4" class="progress is-medium is-danger" v-bind:value="nextEvent.participants.length" max="10"></progress>
-            <progress v-if="nextEvent.participants.length >= 4 && nextEvent.participants.length < 6" class="progress is-medium is-warning" v-bind:value="nextEvent.participants.length" max="10"></progress>
+            <progress v-if="nextEvent.participants.length >= 4 && nextEvent.participants.length < 6" class="progress is-medium is-warning" v-bind:value="nextEvent.participants.length" max="20"></progress>
             <progress v-if="nextEvent.participants.length > 5" class="progress is-medium is-success" v-bind:value="nextEvent.participants.length" max="10"></progress>
           </div>
           <div>
@@ -94,7 +94,13 @@ export default {
         })
         .then(function() {
           console.log("Document successfully written!");
-        })
+          //re-read data
+          docRef.get().then(function(doc) {
+            self.nextEvent = doc.data();
+            self.nextEventRef = doc.id;
+            self.loading = false;            
+          });
+        });
       }
     }).catch(function(error) {
       console.log("Error getting document:", error);
