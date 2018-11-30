@@ -35,14 +35,6 @@
           </div>
           <div>
             <form id="signup-form" class="description" @submit.prevent="signup">
-              <section>
-                <h3>Draktfarge</h3>
-                <input type="radio" v-model="color" name="color" value="2">Argentina
-                <input type="radio" v-model="color" name="color" value="0">Svart
-                <input type="radio" v-model="color" name="color" value="2">Annen
-                <br/>
-              </section>
-
               <div class="field is-grouped">
                 <div class="control is-expanded">
                   <input type="text" class="input" name="name" placeholde="Skriv inn navnet ditt" required="" autocomplete="off" v-model="name">
@@ -82,15 +74,30 @@ export default {
     d.setHours(0,0,0,0);
     var diff = fridayOfWeek - new Date().getDay();
     var nextFriday = new Date(d.setDate(d.getDate() + diff));
-    var nextFridayStr = (nextFriday.getDate() + "/" + (nextFriday.getMonth()+1) + "/" + nextFriday.getFullYear());
+    var nextFridayStr = (nextFriday.getDate() + "-" + (nextFriday.getMonth()+1) + "-" + nextFriday.getFullYear());
 
-    db.collection('events').where("name", "==", "Fredagsgym").where("date", "==", nextFridayStr ).onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, ' => ', doc.data())
+    var docRef = db.collection("events").doc(nextFridayStr);
+
+    docRef.get().then(function(doc) {
+      if (doc.exists) {
+        console.log("Document data:", doc.data());
         self.nextEvent = doc.data();
         self.nextEventRef = doc.id;
         self.loading = false;
-      })
+      } else {
+        console.log("No such document, creating new event for:", nextFridayStr);
+        db.collection("events").doc(nextFridayStr).set({
+          name: "Fredagsgym",
+          date: nextFridayStr,
+          location: "Birkenlundhallen",
+          participants: []
+        })
+        .then(function() {
+          console.log("Document successfully written!");
+        })
+      }
+    }).catch(function(error) {
+      console.log("Error getting document:", error);
     });
 
   },
@@ -100,21 +107,10 @@ export default {
       db.collection('events').doc(this.nextEventRef).update({ "participants" : this.nextEvent.participants })
     },
     signup: function() {
-      this.nextEvent.participants.push({this.name, this.color});
+      this.nextEvent.participants.push(this.name);
       this.addUser();
       this.name="";
     },
-    nextFriday: function() {
-      function nextFriday() {
-        const fridayOfWeek = 5;
-        var d = new Date();
-        d.setHours(0,0,0,0);
-        var diff = fridayOfWeek - new Date().getDay();
-        var nextFriday = new Date(d.setDate(d.getDate() + diff));
-        return (nextFriday.getDate() + "/" + (nextFriday.getMonth()+1) + "/" + nextFriday.getFullYear());
-      }
-
-    }
   }
 
 }

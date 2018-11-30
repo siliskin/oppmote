@@ -33,53 +33,6 @@ db.settings(settings);
 
 Vue.config.productionTip = false
 
-
-// var nextEvent = nextFriday();
-// db.collection("events").where("name", "==", "Fredagsgym").orderBy("date")
-// //db.collection("events").where("name", "==", "Fredagsgym").where("date", "==", "31/8/2018")
-// .get()
-// .then(function(querySnapshot) {
-//   querySnapshot.forEach(function(doc) { 
-//     console.log(doc.id, " => ", doc.data());
-//   });
-// })
-// .catch(function(error) {
-//   console.log("Error getting documents: ", error);
-// });
-
-// db.collection("events").where("name", "==", "Fredagsgym").where("date", "==", "31/8/2018")
-// .onSnapshot(function(data) {
-//   console.log("Current data: ", data);
-// });
-
-// const eventsCollection = db.collection("events");
-
-// eventsCollection
-// .onSnapshot((eventsRef) => {
-//   eventsRef.forEach((doc) => {
-//     const event = doc.data();
-//     events.push(event);
-//   });
-//   console.log(events);
-// });
-
-// export const _events = {
-//   nextEvent: null
-// };
-
-
-
-var eventsRef = db.collection("events");
-var event = 0;
-eventsRef.where("name", "==", "Fredagsgym").where("date", "==", "31/8/2018")
-
-db.collection('events').where("name", "==", "Fredagsgym").where("date", "==", "31/8/2018").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, ' => ', doc.data())
-      })
-})
-
-
 new Vue({
   el: '#app',
   components: { App },
