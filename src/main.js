@@ -21,7 +21,7 @@ var config = {
 
 firebase.initializeApp(config)
 
-firebase.auth().signInAnonymously().then(function() {
+firebase.auth().signInAnonymously().then( () => {
   console.log("Logged in anonymously");
 }).catch(function(err) {
   console.log(err);

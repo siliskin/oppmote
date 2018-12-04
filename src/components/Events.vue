@@ -68,7 +68,7 @@ export default {
     }
   },
   created: function() {
-    var self = this;
+    //var self = this;
     const fridayOfWeek = 5;
     var d = new Date();
     d.setHours(0,0,0,0);
@@ -78,12 +78,12 @@ export default {
 
     var docRef = db.collection("events").doc(nextFridayStr);
 
-    docRef.get().then(function(doc) {
+    docRef.get().then( doc =>  {
       if (doc.exists) {
         console.log("Document data:", doc.data());
-        self.nextEvent = doc.data();
-        self.nextEventRef = doc.id;
-        self.loading = false;
+        this.nextEvent = doc.data();
+        this.nextEventRef = doc.id;
+        this.loading = false;
       } else {
         console.log("No such document, creating new event for:", nextFridayStr);
         db.collection("events").doc(nextFridayStr).set({
@@ -92,24 +92,24 @@ export default {
           location: "Birkenlundhallen",
           participants: []
         })
-        .then(function() {
+        .then( () => {
           console.log("Document successfully written!");
           //re-read data
-          docRef.get().then(function(doc) {
-            self.nextEvent = doc.data();
-            self.nextEventRef = doc.id;
-            self.loading = false;            
+          docRef.get().then( doc => {
+            this.nextEvent = doc.data();
+            this.nextEventRef = doc.id;
+            this.loading = false;            
           });
         });
       }
-    }).catch(function(error) {
+    }).catch( error => {
       console.log("Error getting document:", error);
     });
 
   },
   methods: {
     addUser: function() {
-      var self = this;
+      // var self = this;
       db.collection('events').doc(this.nextEventRef).update({ "participants" : this.nextEvent.participants })
     },
     signup: function() {
