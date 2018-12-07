@@ -6,6 +6,7 @@ import VueFire from 'vuefire'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import '../node_modules/bulma/css/bulma.css';
+import Chart from 'chart.js';
 
 require('firebase/auth')
 Vue.use(VueFire)

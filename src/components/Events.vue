@@ -50,6 +50,12 @@
         </div>
       </div>
     </div>
+    <div class="column is-6 is-offset-3 " >
+      <h3>Oppmøte</h3>
+      <div class="content has-text-centered">
+        <canvas id="stat-chart" width="100" height="100"></canvas>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -64,11 +70,11 @@ export default {
       nextEvent: 0,
       nextEventRef: 0,
       name: '',
-      loading: true
+      loading: true,
+      chart: 0
     }
   },
   created: function() {
-    //var self = this;
     const fridayOfWeek = 5;
     var d = new Date();
     d.setHours(0,0,0,0);
@@ -78,9 +84,10 @@ export default {
 
     var docRef = db.collection("events").doc(nextFridayStr);
 
-    docRef.get().then( doc =>  {
+    
+
+    docRef.onSnapshot( doc =>  {
       if (doc.exists) {
-        console.log("Document data:", doc.data());
         this.nextEvent = doc.data();
         this.nextEventRef = doc.id;
         this.loading = false;
@@ -94,21 +101,76 @@ export default {
         })
         .then( () => {
           console.log("Document successfully written!");
-          //re-read data
-          docRef.get().then( doc => {
-            this.nextEvent = doc.data();
-            this.nextEventRef = doc.id;
-            this.loading = false;            
-          });
         });
       }
-    }).catch( error => {
-      console.log("Error getting document:", error);
     });
-
   },
-  methods: {
-    addUser: function() {
+
+  mounted: function() {
+    var ctx = document.getElementById( "stat-chart" );
+    var dates = [];
+    var perps = [];
+    db.collection("events").orderBy('date').onSnapshot( querySnapShot => {
+      querySnapShot.docChanges().forEach(change => {
+        if (change.type === "added") {
+          dates.push(change.doc.data().date);
+          perps.push(change.doc.data().participants.length);
+        }
+        if (change.type === "modified") {
+          console.log("What changed?", dates.indexOf(change.doc.data().date));
+          perps[dates.indexOf(change.doc.data().date)] = change.doc.data().participants.length;
+          this.chart.update();
+        }
+      }); 
+
+    var chartData = {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [
+        { 
+          data: perps,
+          fill: false,
+          borderColor: '#36495d',
+          borderWidth: 3
+        },
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        lineTension: 1,
+        legend: {
+          display: false
+        },
+        tooltips: {
+          callbacks: {
+           label: function(tooltipItem) {
+            return tooltipItem.yLabel;
+          }
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            padding: 25,
+          }
+        }]
+      }
+    }
+  };
+  if(this.chart == 0) {
+    console.log("Creating chart with dates: ", dates);
+    console.log("and perps: ", perps);
+    this.chart = new Chart(ctx, chartData);
+  }
+});
+
+},
+
+methods: {
+  addUser: function() {
       // var self = this;
       db.collection('events').doc(this.nextEventRef).update({ "participants" : this.nextEvent.participants })
     },
@@ -116,9 +178,8 @@ export default {
       this.nextEvent.participants.push(this.name);
       this.addUser();
       this.name="";
-    },
+    }    
   }
-
 }
 </script>
 
