@@ -258,7 +258,7 @@ methods: {
 }
 
 .spinner > div {
-  background-color: #333;
+  background-color: darkgreen;
   height: 100%;
   width: 6px;
   display: inline-block;
