@@ -133,6 +133,7 @@ export default {
         db.collection("events").doc(nextFridayStr).set({
           name: "Fredagsgym",
           date: nextFridayStr,
+          created_at: new Date(),
           location: "Birkenlundhallen",
           participants: []
         })
@@ -147,7 +148,7 @@ export default {
     var ctx = document.getElementById( "stat-chart" );
     var dates = [];
     var perps = [];
-    db.collection("events").orderBy('date').onSnapshot( querySnapShot => {
+    db.collection("events").orderBy('created_at').onSnapshot( querySnapShot => {
       querySnapShot.docChanges().forEach(change => {
         if (change.type === "added") {
           dates.push(change.doc.data().date);
