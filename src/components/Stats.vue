@@ -2,7 +2,7 @@
   <section>
     <div class="container">
       <h2 class="subtitle">
-        Rooster:<BR/>
+        Kongen av gymmen<BR/>
       </h2>
       <span v-for="(p, index) in this.perps">
         {{ p.name }} : {{ p.attendance }} <BR/>
@@ -74,8 +74,6 @@ export default {
 section {
   padding: 0 !important;
   text-align: center;
-  background-color: rgba(177,185,228,0.3);
-
 }
 
 </style>

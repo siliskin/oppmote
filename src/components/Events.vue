@@ -106,6 +106,5 @@ export default {
 
 section {
   text-align: center;
-  background-color: rgba(177,185,228,0.3);
 }
 </style>

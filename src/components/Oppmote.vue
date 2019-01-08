@@ -91,8 +91,6 @@ export default {
 section {
   padding: 0 !important;
   text-align: center;
-  background-color: rgba(177,185,228,0.3);
-
 }
 
   </style>
