@@ -1,8 +1,12 @@
 <template>
-  <section id="fullscreen" class="hero is-fullheight bkg">
-    <div class="section">
-      <div class="container has-text-black">
-      </div>
+  <section>
+    <div class="container">
+      <h2 class="subtitle">
+        Rooster:<BR/>
+      </h2>
+      <span v-for="(p, index) in this.perps">
+        {{ p.name }} : {{ p.attendance }} <BR/>
+      </span>
     </div>
   </section>
 </template>
@@ -12,20 +16,8 @@ import { db } from '../main'
 
 var Perp = function ( name ) {
   this.name = name;
-  this.attendance = 0;
+  this.attendance = 1;
 };
-
-Perp.prototype.equals = function (obj) {
-  return this.name === obj.name();
-}
-
-Perp.prototype.name = function () {
-  return this.name;
-}
-
-Perp.prototype.attendance = function () {
-  return this.attendance;
-}
 
 Perp.prototype.increaseAttendance = function () {
   this.attendance++;
@@ -35,10 +27,10 @@ export default {
   name: 'Stats',
   data () {
     return {
-      perps: [],
-      chart: 0
+      perps: []
     }
   },
+
   created: function() {
     const thisYear = 2019;
   },
@@ -47,19 +39,31 @@ export default {
     db.collection("events").orderBy('created_at').onSnapshot( querySnapShot => {
       querySnapShot.docChanges().forEach(change => {
         var index = -1;
-        change.doc.data().participants.forEach( el => {
-          if( (index = this.perps.map(p => p.name).indexOf(el)) == -1 ) {
-            this.perps.push(new Perp(el));
-          } else {
-            this.perps[index].increaseAttendance();
-          }
-        })
+        
+        console.log("Change type =", change.type);
+        if( change.type === "added") {
+          change.doc.data().participants.forEach( el => {
+            if( (index = this.perps.map(p => p.name).indexOf(el)) == -1 ) {
+              this.perps.push(new Perp(el));
+              console.log(el);
+            } else {
+              this.perps[index].increaseAttendance();
+              this.perps.sort( (a, b) => {
+                return b.attendance - a.attendance; 
+              });  
+            }
+          })
+        } 
+        if( change.type === "modified") {
+
+        }
+
       });
     });
-
   },
 
   methods: {
+
   }
 }
 </script>
@@ -67,8 +71,11 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.section {
+section {
   padding: 0 !important;
+  text-align: center;
+  background-color: rgba(177,185,228,0.3);
+
 }
 
 </style>
