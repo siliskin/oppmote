@@ -1,10 +1,8 @@
 <template>
   <section>
-    <div class="container">
-      <h3>Oppmøte</h3>
-      <div class="content">
-        <canvas id="stat-chart" height="100"></canvas>
-      </div>
+    <h3>Oppmøte</h3>
+    <div class="content">
+      <canvas id="stat-chart" width="600" height="100"></canvas>
     </div>
   </section>
 </template>
@@ -93,4 +91,4 @@ section {
   text-align: center;
 }
 
-  </style>
+</style>

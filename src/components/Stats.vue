@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container">
+    <div class="content">
       <h2 class="subtitle">
         Kongen av gymmen<BR/>
       </h2>
