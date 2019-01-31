@@ -2,7 +2,7 @@
   <section>
     <div class="content">
       <h2 class="subtitle">
-        Kongen av gymmen 2019<BR/>
+        Kongen av gymmen<BR/>
       </h2>
       <span v-for="(p, index) in this.perps">
         {{ p.name }} : {{ p.attendance }} <BR/>
@@ -41,7 +41,7 @@ export default {
         var index = -1;
         
         console.log("Change type =", change.type);
-        
+        if( change.type === "added") {
           change.doc.data().participants.forEach( el => {
             if( (index = this.perps.map(p => p.name).indexOf(el)) == -1 ) {
               this.perps.push(new Perp(el));
@@ -53,7 +53,11 @@ export default {
               });  
             }
           })
-        
+        } 
+        if( change.type === "modified") {
+
+        }
+
       });
     });
   },
