@@ -2,7 +2,7 @@
   <section>
     <div class="content">
       <h2 class="subtitle">
-        Kongen av gymmen<BR/>
+        Kongen av gymmen 2019<BR/>
       </h2>
       <span v-for="(p, index) in this.perps">
         {{ p.name }} : {{ p.attendance }} <BR/>
